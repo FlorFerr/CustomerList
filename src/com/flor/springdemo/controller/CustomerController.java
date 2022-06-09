@@ -23,16 +23,12 @@ public class CustomerController {
 	@Autowired
 	private CustomerService customerService;
 
-	
 	@GetMapping("/list")
 	public String listCustomers(Model theModel) {
-		
-		//Get costumer from the DAO
 		
 		List<Customer> theCustomers = customerService.getCustomers();
 		
 		//Add the customers to the model
-		
 		theModel.addAttribute("customers", theCustomers);
 		return "list-customers";
 	}
@@ -41,7 +37,6 @@ public class CustomerController {
 	public String showFormForAdd(Model theModel) {
 		
 		//Create model attribute to bind form data
-		
 		Customer theCustomer = new Customer();
 		
 		theModel.addAttribute("customer", theCustomer);
@@ -52,8 +47,6 @@ public class CustomerController {
 	public String saveCustomer(@ModelAttribute("customer") Customer theCustomer) {
 		
 		customerService.saveCustomer(theCustomer);
-		
-		
 		
 		return "redirect:/customer/list";
 	}
@@ -67,4 +60,22 @@ public class CustomerController {
 		
 		return "customer-form";
 	}
+	
+	@GetMapping("/delete")
+	public String delete(@RequestParam("customerId") int theId) {
+		
+		customerService.deleteCustomer(theId);
+	
+		return "redirect:/customer/list";
+	}
+	
+	@GetMapping("/search")
+	public String searchCustomer(@RequestParam("searchName") String searchName, Model theModel) {
+		
+		List<Customer> theCustomers = customerService.searchCustomer(searchName);
+		
+		theModel.addAttribute("customers", theCustomers);
+		return "list-customers";
+	}
+	
 }
